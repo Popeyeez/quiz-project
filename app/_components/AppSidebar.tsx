@@ -7,6 +7,7 @@ import {
   SidebarGroup,
   SidebarHeader,
 } from "@/components/ui/sidebar";
+import { useRouter } from "next/navigation";
 
 type Article = {
   id: number;
@@ -15,12 +16,19 @@ type Article = {
 
 export function AppSidebar() {
   const [articles, setArticles] = useState<Article[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
-    fetch("/api/articles")
-      .then((res) => res.json())
-      .then((data) => setArticles(data))
-      .catch((err) => console.error(err));
+    const fetchArticles = async () => {
+      try {
+        const res = await fetch("/api/articles");
+        const data = await res.json();
+        setArticles(data);
+      } catch (err) {
+        console.error("Error fetching articles:", err);
+      }
+    };
+    fetchArticles();
   }, []);
 
   return (
@@ -36,16 +44,18 @@ export function AppSidebar() {
             articles.map((article) => (
               <div
                 key={article.id}
-                className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+                className="px-4 py-2 hover:bg-gray-200 cursor-pointer rounded-md"
+                onClick={() => router.push(`/quiz?articleId=${article.id}`)}
               >
                 <p className="text-sm font-medium">{article.title}</p>
-                <p className="text-xs text-gray-500"></p>
               </div>
             ))
           )}
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter>End of History</SidebarFooter>
+      <SidebarFooter className="text-center text-gray-500 text-sm py-2">
+        End of History
+      </SidebarFooter>
     </Sidebar>
   );
 }
