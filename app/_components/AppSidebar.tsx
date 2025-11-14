@@ -38,9 +38,7 @@ export function AppSidebar() {
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          {articles.length === 0 ? (
-            <p className="text-gray-500 px-4 py-2">No articles yet</p>
-          ) : (
+          {Array.isArray(articles) && articles.length > 0 ? (
             articles.map((article) => (
               <div
                 key={article.id}
@@ -50,6 +48,8 @@ export function AppSidebar() {
                 <p className="text-sm font-medium">{article.title}</p>
               </div>
             ))
+          ) : (
+            <p className="text-gray-500 px-4 py-2">No articles yet</p>
           )}
         </SidebarGroup>
       </SidebarContent>

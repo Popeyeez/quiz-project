@@ -1,18 +1,21 @@
-import { Pool } from "pg";
+import { sql } from "@vercel/postgres";
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false,
-  },
-});
-
-export async function query(text: string) {
+export async function getArticles() {
   try {
-    const res = await pool.query(text);
-    return res;
+    const result = await sql`SELECT * FROM articles ORDER BY id DESC;`;
+    return result.rows;
   } catch (err) {
-    console.error("❌ Database query error:", err);
+    console.error("getArticles error:", err);
+    throw err;
+  }
+}
+
+export async function getArticleById(id: string) {
+  try {
+    const result = await sql`SELECT * FROM articles WHERE id = ${id};`;
+    return result.rows[0];
+  } catch (err) {
+    console.error("getArticleById error:", err);
     throw err;
   }
 }

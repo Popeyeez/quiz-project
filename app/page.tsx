@@ -8,14 +8,26 @@ export default function Home() {
   const [content, setContent] = useState("");
 
   async function handleSubmit() {
-    const res = await fetch("/api/articles", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title, content }),
-    });
+    try {
+      const res = await fetch("/api/articles", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title, content }),
+      });
 
-    const data = await res.json();
-    console.log("Saved article:", data);
+      if (!res.ok) throw new Error("Failed to save article");
+
+      const data = await res.json();
+
+      alert("Article saved successfully!");
+      setTitle("");
+      setContent("");
+
+      console.log("Saved article:", data);
+    } catch (err) {
+      console.error(err);
+      alert("Error saving article");
+    }
   }
 
   return (

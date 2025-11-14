@@ -9,6 +9,7 @@ type QuizQuestion = {
 
 type QuizData = {
   title: string;
+  content: string;
   questions: QuizQuestion[];
 };
 
@@ -36,30 +37,39 @@ export default function QuizPage() {
 
   return (
     <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow">
-      <h1 className="text-2xl font-bold mb-4">{quizData.title}</h1>
+      <h1 className="text-2xl font-bold mb-2">{quizData.title}</h1>
+      {quizData.content && (
+        <p className="mb-4 text-gray-700">{quizData.content}</p>
+      )}
+
       <div>
-        {quizData.questions.map((question, index) => (
-          <div key={index} className="mb-6">
-            <p className="font-medium mb-2">{question.text}</p>
-            <ul>
-              {question.options.map((option, idx) => (
-                <li key={idx} className="py-1">
-                  <label className="flex items-center gap-2">
-                    <input
-                      type="radio"
-                      name={`question-${index}`}
-                      value={option}
-                    />
-                    {option}
-                  </label>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
+        {quizData.questions?.length ? (
+          quizData.questions.map((question, index) => (
+            <div key={index} className="mb-6">
+              <p className="font-medium mb-2">{question.text}</p>
+              <ul>
+                {question.options.map((option, idx) => (
+                  <li key={idx} className="py-1">
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name={`question-${index}`}
+                        value={option}
+                      />
+                      {option}
+                    </label>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        ) : (
+          <p className="text-gray-500">No questions generated yet.</p>
+        )}
       </div>
+
       <button className="mt-6 bg-blue-500 hover:bg-blue-600 text-white font-medium px-6 py-2 rounded">
-        Submit
+        Start Quiz
       </button>
     </div>
   );
